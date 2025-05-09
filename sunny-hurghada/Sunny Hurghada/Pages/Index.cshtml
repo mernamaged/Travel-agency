@@ -1,0 +1,217 @@
+﻿@page "{CurrentCulture?}/{destination:int?}/{tourTypeId:int?}"
+@using Sunny_Hurghada.Pages
+@model Sunny_Hurghada.Pages.IndexModel
+
+    <!-- ======================= Start Banner ===================== -->
+    <div class="main-banner vedio-banner search-bottom">
+        <div class="overlay"></div>
+        <div class="video">
+            <iframe src="https://www.youtube.com/embed/W0Xq30cwhiA?autoplay=1"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;"
+                    allowfullscreen></iframe>
+        </div>
+        <div class="container">
+            <div class="col-md-12 col-sm-12">
+                <div class="caption text-center cl-white mb-5">
+                    <span class="stylish">Travel is only glamorous in retrospect</span>
+                    <h1>Explore & Travel</h1>
+                </div>
+
+                <form class="st-search-form-tour icon-frm withlbl" method="get">
+                    <div class="g-field-search">
+                        <div class="row">
+                            <!-- Destination -->
+                            <div class="col-lg-5 col-md-4 border-right mxnbr">
+                                <div class="form-group">
+                                    <i class="ti-location-pin field-icon"></i>
+                                    <label>Select Destination</label>
+                                    <select class="form-control" name="SelectedDestination" id="destination">
+                                        <option value="">Select Destination</option>
+                                        @foreach (var name in Model.Destinations)
+                                        {
+                                            <option  value="@name.Id">@name.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Category -->
+                            <div class="col-lg-5 col-md-4 border-right mxnbr">
+                                <div class="form-group">
+                                    <i class="ti-flag-alt-2 field-icon"></i>
+                                    <label>Select Category</label>
+                                    <select class="form-control" name="SelectedType" id="tourTypeId">
+                                        <option value="">Select Category</option>
+                                        @foreach (var tourType in Model.TourTypesLocalized)
+                                        {
+                                            <option value="@tourType.TourTypeId">@tourType.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Submit -->
+                            <div class="col-lg-2 p-0 mp-15">
+                                <div class="form-group search">
+                                    <button class="btn btn-theme btn-search" type="submit">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- ======================= End Banner ===================== -->
+    <!-- ======================= Featured Tours ===================== -->
+    <section class="pb-4">
+        <div class="container">
+            <div class="sec-heading center">
+                <p>Sunny Hurghada</p>
+                <h2>Featured Tours</h2>
+            </div>
+
+            <div class="row">
+                @foreach (var tour in Model.TourResults)
+                {
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="singlePlaceitem">
+                            <figure class="singlePlacewrap">
+                            <a class="place-link" asp-page="/TourDetail" asp-route-CurrentCulture="@Model.CurrentCulture" asp-route-id="@tour.Id"
+                                   asp-route-type="@tour.TourTypeLocalizedName"
+                                   asp-route-destination="@tour.Destination.Name" asp-route-name="@tour.TourLocalizedName">
+                                    <img class="cover" src="@tour.MainPhotoUrl" alt="tour"/>
+                                </a>
+                            </figure>
+                            <div class="placeDetail">
+                                <span class="onsale-section">
+                                    <span class="onsale">@tour.Discount% Off</span>
+                                </span>
+                                <div class="placeDetail-left">
+                                    <div class="item-rating">
+                                        <i class="fa fa-clock filled"></i>
+                                        <span>@tour.Duration hours</span>
+                                    </div>
+                                    <h4 class="title">
+                                    <a asp-page="/TourDetail" asp-route-id="@tour.Id" asp-route-CurrentCulture="@Model.CurrentCulture" asp-route-destination="@tour.DestinationName"
+                                       asp-route-name="@tour.TourLocalizedName" asp-route-type="@tour.TourTypeLocalizedName">@tour.TourLocalizedName</a>
+                                    </h4>
+                                    <span class="placeDetail-detail">
+                                        <i class="ti-location-pin"></i> @tour.Destination.Name
+                                    </span>
+                                </div>
+                                <div class="pricedetail-box">
+                                    <h6 class="price-title-cut">$@((int)tour.AdultPrice)</h6>
+                                    <h4 class="price-title">$@((int)tour.DiscountedPrice)</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+    <!-- ======================= Featured Tours End ===================== -->
+    <!-- ======================= Popular Destinations ===================== -->
+    <section class="gray">
+        <div class="container">
+            <div class="sec-heading center">
+                <p>Sunny Hurghada</p>
+                <h2>Popular Destinations</h2>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="owl-carousel owl-theme" id="lists-slide">
+                        @foreach (var destination in Model.Destinations)
+                        {
+                            <div class="single-item">
+                                <div class="destination-item">
+                                    <span class="discount-off">-@destination.Dicount%</span>
+                                    <figure class="destination-list-wrap">
+                                    <a class="destination-listlink" asp-page="/ToursList" asp-route-CurrentCulture="@Model.CurrentCulture" asp-route-name="@destination.Name">
+                                            <img class="cover" src="/img/destinations/@destination.Photo" alt="@destination.Name" />
+                                        </a>
+                                    </figure>
+                                    <div class="destination-listdetails">
+                                        <h4 class="title">
+                                        <a class="title-ln" asp-page="/ToursList" asp-route-name="@destination.Name" asp-route-CurrentCulture="@Model.CurrentCulture"
+                                           asp-route-id="@destination.Id">@destination.Name</a>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ========================= Popular Destinations End ============================ -->
+    <!-- ================= true Facts start ========================= -->
+    <section class="theme-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+                    <div class="facts-wrap light">
+                        <div class="facts-icon"><i class="ti-star"></i></div>
+                        <div class="facts-detail">
+                            <h2>Best Rates</h2>
+                            <p>Morbi semper fames</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="facts-wrap light">
+                        <div class="facts-icon"><i class="ti-headphone"></i></div>
+                        <div class="facts-detail">
+                            <h2>24/7 Support</h2>
+                            <p>Morbi semper fames</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="facts-wrap light">
+                        <div class="facts-icon"><i class="ti-face-smile"></i></div>
+                        <div class="facts-detail">
+                            <h2>98% Happy Travelers</h2>
+                            <p>Morbi semper fames</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ================= End true Facts ========================= -->
+    <!-- ============================ Transfer Service ================================== -->
+    <section>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6">
+                    <img src="/img/transfer.jpg" class="img-fluid rounded" alt="Transfer Service" />
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="story-wrap explore-content">
+                        <h2>Transfer Service</h2>
+                        <ul class="avl-features third d-block">
+                            <li class="mw-100">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li>
+                            <li class="mw-100">Aliquam tincidunt mauris eu risus.</li>
+                            <li class="mw-100">Vestibulum auctor dapibus neque.</li>
+                            <li class="mw-100">Nunc dignissim risus id metus.</li>
+                            <li class="mw-100">Cras ornare tristique elit.</li>
+                            <li class="mw-100">Vivamus vestibulum ntulla nec ante.</li>
+                            <li class="mw-100">Praesent placerat risus quis eros.</li>
+                            <li class="mw-100">Fusce pellentesque suscipit nibh.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ============================ Transfer Service End ================================== -->
+
+    <a id="back2Top" class="top-scroll" title="Back to top" href="#"><i class="ti-arrow-up"></i></a>
+
+</div>

@@ -1,0 +1,224 @@
+﻿@using Sunny_Hurghada.Managers
+@using Microsoft.Extensions.Options
+@using Microsoft.AspNetCore.Localization
+@using System.Globalization
+@inject DestinationManager destinationManager
+@inject TourManager tourManager
+@inject IOptions<RequestLocalizationOptions> LocalizationOptions
+@{
+    var CurrentCulture = CultureInfo.DefaultThreadCurrentCulture.TwoLetterISOLanguageName;
+
+    var destinations = await destinationManager.GetDestinationsNames();
+    var tourTypes = await tourManager.GetTourTypeLocalized();
+}
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Homepage</title>
+    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+    <link rel="stylesheet" href="/css/plugins.css">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link href="/css/colors.css" rel="stylesheet">
+</head>
+
+<body class="orange-skin">
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="preloader"><span></span><span></span></div>
+    </div>
+
+    <!-- Start Navigation -->
+    <div class="topbar-head">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="topbar-wrap">
+                        <div class="topbar-left">
+                            <ul class="tp-list">
+                                <li><a href="#."><i class="ti-facebook"></i></a></li>
+                                <li><a href="#."><i class="ti-instagram"></i></a></li>
+                                <li><a href="#."><i class="ti-youtube"></i></a></li>
+                            </ul>
+                            <ul class="tp-list ml-2 nbr">
+                                <li><a href="#.">info@sunnyhurghada.tours</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="topbar-right">
+                            <ul class="tp-list">
+                                <li><a href="#.">(+20) 102 000 4011</a></li>
+                            </ul>
+                            <ul class="tp-list nbr ml-2">
+                                <li class="dropdown dropdown-currency hidden-xs hidden-sm">
+                                    <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        EN<i class="ml-1 fa fa-angle-down"></i>
+                                    </a>
+                                    <ul class="dropdown-menu mlix-wrap">
+                                        @foreach (var culture in LocalizationOptions.Value.SupportedCultures)
+                                        {
+                                            <li>
+                                                <a asp-route-CurrentCulture="@culture.TwoLetterISOLanguageName">
+                                                    @culture.TwoLetterISOLanguageName.ToUpper()
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header header-light">
+        <div class="container">
+            <nav id="navigation" class="navigation navigation-landscape">
+                <div class="nav-header">
+                    <a class="nav-brand" href="#">
+                        <img src="/img/logo.svg" width="150" class="logo" alt="" />
+                    </a>
+                    <div class="nav-toggle"></div>
+                </div>
+                <div class="nav-menus-wrapper">
+                    <ul class="nav-menu">
+                        <li><a asp-page="/Index" asp-route-CurrentCulture="@CurrentCulture">Home</a></li>
+
+                        <li>
+                            <a href="JavaScript:Void(0);">Tours<span class="submenu-indicator"></span></a>
+                            <ul class="nav-dropdown nav-submenu">
+                                @foreach (var tourType in tourTypes)
+                                {
+                                    <li>
+                                        <a asp-page="/ToursList" asp-route-name="@tourType.Name" asp-route-CurrentCulture="@CurrentCulture">
+                                            @tourType.Name
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="JavaScript:Void(0);">Destinations<span class="submenu-indicator"></span></a>
+                            <ul class="nav-dropdown nav-submenu">
+                                @foreach (var destination in destinations)
+                                {
+                                    <li>
+                                        <a asp-page="/ToursList" asp-route-name="@destination" asp-route-CurrentCulture="@CurrentCulture">
+                                            @destination
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+
+                        <li><a asp-page="/Transfer" asp-route-CurrentCulture="@CurrentCulture">Transfer</a></li>
+                        <li><a asp-page="/Contact" asp-route-CurrentCulture="@CurrentCulture">Contact Us</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- End Navigation -->
+    @RenderBody()
+
+    <!-- Newsletter Section -->
+    <section class="alert-wrap pt-5 pb-5" style="background:#ed7e35 url(img/bg-new.png);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="jobalert-sec">
+                        <h3 class="mb-1 text-light">Get New Offers & Deals Notification!</h3>
+                        <p class="text-light">Subscribe & get all Offers & Deals notification.</p>
+                    </div>
+                </div>
+                <form method="post" class="col-lg-6 col-md-6" >
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Enter Your Email" name="guestEmail">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-black black">Subscribe</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="dark-footer skin-dark-footer">
+        <div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3">
+                        <div class="footer-widget">
+                            <img src="/img/logo-white.svg" class="img-footer" alt="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="footer-widget">
+                            <h4 class="widget-title">Email</h4>
+                            <ul class="footer-menu">
+                                <li><a href="#.">info@sunnyhurghada.tours</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="footer-widget">
+                            <h4 class="widget-title">Phone</h4>
+                            <ul class="footer-menu">
+                                <li><a href="#.">(+20) 102 000 4011</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="footer-widget">
+                            <h4 class="widget-title">Follow Us</h4>
+                            <ul class="footer-bottom-social mt-2">
+                                <li><a href="#."><i class="ti-facebook"></i></a></li>
+                                <li><a href="#."><i class="ti-instagram"></i></a></li>
+                                <li><a href="#."><i class="ti-youtube"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-md-6">
+                        <p class="mb-0">© 2022 Sunny Hurghada. All Rights Reserved</p>
+                    </div>
+                    <div class="col-lg-6 col-md-6 text-right">
+                        <p class="mb-0">Powered by <a href="#.">Innovix Solutions</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- All Jquery -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/circleMagic.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/rangeslider.js"></script>
+    <script src="/js/select2.min.js"></script>
+    <script src="/js/aos.js"></script>
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/jquery.magnific-popup.min.js"></script>
+    <script src="/js/slick.js"></script>
+    <script src="/js/slider-bg.js"></script>
+    <script src="/js/lightbox.js"></script>
+    <script src="/js/imagesloaded.js"></script>
+    <script src="/js/isotope.min.js"></script>
+    <script src="/js/custom.js"></script>
+    <script src="/js/moment.min.js"></script>
+    <script src="/js/daterangepicker.js"></script>
+
+</body>
+</html>

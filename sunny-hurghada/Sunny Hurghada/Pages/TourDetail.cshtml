@@ -1,0 +1,257 @@
+﻿@page "/{CurrentCulture?}/tours/{destination}/{name}/{type}/{id:int}"
+@model Sunny_Hurghada.Pages.TourDetailModel
+
+<div id="main-wrapper">
+
+    <!-- ========== Hero Banner with Slider ========== -->
+    <div class="featured-slick">
+        <div class="featured-slick-slide">
+            @foreach (var photo in Model.TourDetails.TourPhotos)
+            {
+                <div>
+                    <a href="/img/g-1.jpg" class="mfp-gallery">
+                        <img src="@photo.PhotoFullUrl" class="img-fluid mx-auto" alt="" />
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- ========== Tour Highlights Section ========== -->
+    <section class="spd-wrap">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <div class="slide-property-detail">
+
+                        <div class="slide-property-first">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="row">
+
+                                        <div class="col-lg-3 col-6">
+                                            <div class="singles_item">
+                                                <div class="icon"><i class="icofont-stopwatch"></i></div>
+                                                <div class="info">
+                                                    <h4 class="name">Duration</h4>
+                                                    <p class="value">@Model.TourDetails.Duration hours</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 col-6">
+                                            <div class="singles_item">
+                                                <div class="icon"><i class="icofont-beach"></i></div>
+                                                <div class="info">
+                                                    <h4 class="name">Tour Type</h4>
+                                                    <p class="value">@Model.TourDetails.TourTypeLocalizedName</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 col-6">
+                                            <div class="singles_item">
+                                                <div class="icon"><i class="icofont-island"></i></div>
+                                                <div class="info">
+                                                    <h4 class="name">Location</h4>
+                                                    <p class="value">@Model.TourDetails.DestinationName</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Tour Details Section ========== -->
+    <section class="gray pt-0">
+        <div class="container">
+            <div class="row">
+
+                <!-- Tour Details -->
+                <div class="col-lg-8">
+
+                    <div class="block-wrap mt-4">
+                        <div class="block-header">
+                            <h4 class="block-title">Description</h4>
+                        </div>
+                        <div class="block-body">
+                            <p>@Model.TourDetails.Description</p>
+                        </div>
+                    </div>
+                    
+                    <div class="block-wrap">
+                        <div class="block-header">
+                            <h4 class="block-title">Includes</h4>
+                        </div>
+                        <div class="block-body">
+                            <ul class="avl-features third">
+                                @foreach (var item in Model.TourDetails.Include.Split('/'))
+                                {
+                                    <li>@item</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="block-wrap">
+                        <div class="block-header">
+                            <h4 class="block-title">Excludes</h4>
+                        </div>
+                        <div class="block-body">
+                            <ul class="avl-features third">
+                                @foreach (var item in Model.TourDetails.Exclude.Split('/'))
+                                {
+                                    <li>@item</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="block-wrap">
+                        <div class="block-header">
+                            <h4 class="block-title">What to Bring</h4>
+                        </div>
+                        <div class="block-body">
+                            <ul class="avl-features third">
+                                @foreach (var item in Model.TourDetails.WhatToTake.Split('/'))
+                                {
+                                    <li>@item</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Booking Sidebar -->
+                <div class="col-lg-4">
+                    <div class="side-booking-wrap over-top radius-0">
+                        <div class="side-booking-header row">
+                            <div class="col-6">
+                                <span>Adult</span><span>Price</span>
+                                <h3 class="price">$@((int)Model.TourDetails.DiscountedPrice)</h3>
+                            </div>
+                            <div class="col-6">
+                                <span>Child</span><span>Price</span>
+                                <h3 class="price">$@((int)Model.TourDetails.ChildPrice)</h3>
+                            </div>
+                        </div>
+                        <form method="post">
+                            <div asp-validation-summary="All"></div>
+                        <div class="px-4">
+                            <div class="row side-booking-body pb-3">
+                                <div class="col-12">
+                                    <div class="form-group px-0">
+                                        <label asp-for="NewTourBooking.TripDate">Check In</label>
+                                        <div class="cld-box">
+                                            <i class="ti-calendar"></i>
+                                                <input asp-for="NewTourBooking.TripDate" type="text" name="checkin" class="form-control" />
+                                                <span asp-validation-for="NewTourBooking.TripDate"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group px-0">
+                                        <label asp-for="NewTourBooking.Adults">Adults</label>
+                                        <div class="guests-box">
+                                            <button class="counter-btn" type="button" id="cnt-down"><i class="ti-minus"></i></button>
+                                                <input asp-for="NewTourBooking.Adults" type="text" id="guestNo" value="2" />
+                                            <button class="counter-btn" type="button" id="cnt-up"><i class="ti-plus"></i></button>
+                                                <span asp-validation-for="NewTourBooking.Adults"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group px-0">
+                                            <label asp-for="NewTourBooking.Children">Kids</label>
+                                        <div class="guests-box">
+                                            <button class="counter-btn" type="button" id="kcnt-down"><i class="ti-minus"></i></button>
+                                            <input asp-for="NewTourBooking.Children" type="text" id="kidsNo" name="kids" value="0" />
+                                            <button class="counter-btn" type="button" id="kcnt-up"><i class="ti-plus"></i></button>
+                                                <span asp-validation-for="NewTourBooking.Children"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label asp-for="NewGuest.FullName">Full Name</label>
+                                            <input asp-for="NewGuest.FullName" type="text" class="form-control" placeholder="Your Name" />
+                                            <span asp-validation-for="NewGuest.FullName"></span>
+                                    </div> 
+                                </div>
+
+                                <div class="col-12">
+                                 <div class="form-group">
+                                            <label asp-for="NewGuest.Email">Your Email</label>
+                                            <input asp-for="NewGuest.Email" type="email" class="form-control" placeholder="Your Email" />
+                                            <span asp-validation-for="NewGuest.Email"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                            <label asp-for="NewTourBooking.Nationality">Nationality</label>
+                                            <select asp-for ="NewTourBooking.Nationality" class="form-control">
+                                            <option>Select Nationality</option>
+                                            <option value="eg">Egyptian</option>
+                                            <option value="us">American</option>
+                                            <option value="de">German</option>
+                                            <option value="ru">Russian</option>
+                                            <option value="uk">British</option>
+                                        </select>
+                                            <span asp-validation-for="NewTourBooking.Nationality"></span>
+                                    </div>
+                                </div>
+                                   
+                                <div class="col-12">
+                                    <div class="form-group">
+                                            <label asp-for="NewGuest.Phone">Your Phone</label>
+                                            <input asp-for="NewGuest.Phone" type="tel" class="form-control" placeholder="Your Phone" />
+                                            <span asp-validation-for="NewGuest.Phone"></span>
+                                    </div>
+                                </div> 
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                            <label asp-for="NewTourBooking.SpecialRequest">Special Request</label>
+                                            <textarea asp-for="NewTourBooking.SpecialRequest"  class="form-control" placeholder="Send Message to author..."></textarea>
+                                            <span asp-validation-for="NewTourBooking.SpecialRequest"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="stbooking-footer mt-2 mb-4">
+                                        <div class="form-group mb-0">
+                                                <button type="submit" asp-route-id="@Model.Id" class="btn full-width btn-theme">Book Now</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </div> <!-- End Sidebar -->
+
+            </div>
+        </div>
+    </section>
+
+    <a id="back2Top" class="top-scroll" title="Back to top" href="#"><i class="ti-arrow-up"></i></a>
+
+</div>
+
